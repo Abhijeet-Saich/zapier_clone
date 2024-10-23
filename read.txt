@@ -1,0 +1,42 @@
+What job does ZAPIER does ?
+
+create a ZAP 
+You will get a link
+Paste that link in Github
+if any git-hub update
+request send to Zapier from Github
+we extract data from that request
+Perform all the required action based on received data
+
+
+
+
+
+
+//ARCHITECTURE
+
+*request comes to Zapier
+    --> store in db
+    --> send it to kafka queue
+    --> [How to make the above process atomic ?],to make sure EVENT reaches both DB and kafka-queue
+    ##
+    --> create a sweeper which check's if any event is "inActive" for 1 hour,
+    --> sweeper pushes this event again in kafka-queue
+    OR
+    --> put request in DB in another table "trigger-outbox"
+    --> use sweeper to pick "requests" from this table and send it to queue
+    --> this is called "tranction" pattern,as ATOMICITY is default in DB
+
+
+
+
+
+
+// DATABASE MODELS
+
+zap --> Trigger (one to one)
+zap --> actions (one to many)
+trigger  --> available triggers (one to many)
+action   --> available actions  (many to one)   
+
+
